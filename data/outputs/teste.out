@@ -1,0 +1,10 @@
+10 FOUND
+15 NOT_FOUND
+10 NOT_FOUND
+20 FOUND
+
+=== Estatísticas do Benchmark ===
+Tempo Total (ns): 18800
+Percentil p50 (ns): 2100
+Percentil p99 (ns): 5100
+Total de operações processadas: 8
