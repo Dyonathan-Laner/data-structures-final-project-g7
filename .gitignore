@@ -222,3 +222,5 @@ data/outputs/*.json
 data/outputs/*.out
 data/traces/*.trace
 data/traces/*.expected
+data/quick_run/
+benchmark_summary.csv

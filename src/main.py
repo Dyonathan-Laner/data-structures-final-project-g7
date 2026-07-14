@@ -16,6 +16,47 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.tree.avl_tree import AVLTree
 
 
+def format_time(ns_val: float) -> str:
+    """Format nanosecond values to user-friendly units (min, s, ms, µs, ns).
+
+    Displays at most two units where the value is between 0.5 and 5000.
+    However:
+      - 'ns' is always displayed if the value is < 0.5 ns.
+      - 'min' is always displayed if the value is > 5000 min.
+    """
+    units = [
+        ("min", ns_val / 60_000_000_000, "{:.2f}"),
+        ("s", ns_val / 1_000_000_000, "{:.2f}"),
+        ("ms", ns_val / 1_000_000, "{:.2f}"),
+        ("µs", ns_val / 1_000, "{:.2f}"),
+        ("ns", ns_val, "{:.0f}")
+    ]
+    
+    # Boundary checks:
+    # 1. Extremely small value: if ns < 0.5
+    if ns_val < 0.5:
+        return f"{ns_val:.2f} ns"
+        
+    # 2. Extremely large value: if min > 5000
+    val_min_check = ns_val / 60_000_000_000
+    if val_min_check > 5000:
+        return f"{val_min_check:.2f} min"
+        
+    valid = []
+    for name, val, fmt in units:
+        if 0.5 <= val <= 5000:
+            valid.append((name, val, fmt))
+            
+    if valid:
+        display_parts = [f"{fmt.format(val)} {name}" for name, val, fmt in valid[:2]]
+        return " e ".join(display_parts)
+        
+    # Fallback in case of rounding/edge cases
+    if ns_val >= 60_000_000_000:
+        return f"{ns_val / 60_000_000_000:.2f} min"
+    return f"{ns_val:.0f} ns"
+
+
 def process_trace(trace_path: str, output_path: str) -> None:
     """Reads a trace file, runs operations on MeuBST, and writes search results and statistics.
 
@@ -90,6 +131,9 @@ def process_trace(trace_path: str, output_path: str) -> None:
     p50 = sorted_latencies[int(n * 0.50)]
     p99 = sorted_latencies[min(int(n * 0.99), n - 1)]
 
+    final_height = bst._height(bst.root)
+    final_size = bst._size(bst.root)
+
     # Write output to the destination file
     try:
         with open(output_path, 'w', encoding='utf-8') as f:
@@ -99,18 +143,25 @@ def process_trace(trace_path: str, output_path: str) -> None:
             f.write("\n")
             f.write("=== Estatísticas do Benchmark ===\n")
             f.write(f"Tempo Total (ns): {total_time}\n")
+            f.write(f"Tempo Total formatado: {format_time(total_time)}\n")
             f.write(f"Percentil p50 (ns): {p50}\n")
+            f.write(f"Percentil p50 formatado: {format_time(p50)}\n")
             f.write(f"Percentil p99 (ns): {p99}\n")
+            f.write(f"Percentil p99 formatado: {format_time(p99)}\n")
             f.write(f"Total de operações processadas: {len(latencies)}\n")
+            f.write(f"Altura final da árvore: {final_height}\n")
+            f.write(f"Chaves vivas ao final: {final_size}\n")
     except Exception as e:
         print(f"Erro ao salvar arquivo de saída: {e}", file=sys.stderr)
         sys.exit(1)
 
     print("Benchmark concluído com sucesso!")
     print(f"Resultados salvos em: {output_path}")
-    print(f"Tempo Total: {total_time} ns")
-    print(f"p50: {p50} ns")
-    print(f"p99: {p99} ns")
+    print(f"Tempo Total: {format_time(total_time)}")
+    print(f"p50: {format_time(p50)}")
+    print(f"p99: {format_time(p99)}")
+    print(f"Altura final da árvore: {final_height}")
+    print(f"Chaves vivas ao final: {final_size}")
 
 
 if __name__ == '__main__':
