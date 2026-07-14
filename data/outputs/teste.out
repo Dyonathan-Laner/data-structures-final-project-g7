@@ -4,7 +4,7 @@
 20 FOUND
 
 === Estatísticas do Benchmark ===
-Tempo Total (ns): 18800
-Percentil p50 (ns): 2100
-Percentil p99 (ns): 5100
+Tempo Total (ns): 28400
+Percentil p50 (ns): 4100
+Percentil p99 (ns): 10200
 Total de operações processadas: 8

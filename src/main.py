@@ -13,7 +13,7 @@ import time
 # Ensure the parent directory is in the system path to allow importing from src
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.arvore import MeuBST
+from src.tree.avl_tree import AVLTree
 
 
 def process_trace(trace_path: str, output_path: str) -> None:
@@ -23,7 +23,7 @@ def process_trace(trace_path: str, output_path: str) -> None:
         trace_path (str): Path to the input trace file.
         output_path (str): Path to the output results file.
     """
-    bst = MeuBST()
+    bst = AVLTree()
     latencies = []
     search_results = []
     
@@ -39,7 +39,7 @@ def process_trace(trace_path: str, output_path: str) -> None:
 
     for line_num, line in enumerate(lines, 1):
         stripped = line.strip()
-        if not stripped:
+        if not stripped or stripped.startswith('#'):
             continue
 
         try:

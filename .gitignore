@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Ignorar resultados de benchmark e logs
+data/outputs/*.json
+data/outputs/*.out
+data/traces/*.trace
+data/traces/*.expected
