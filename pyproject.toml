@@ -1,0 +1,16 @@
+[project]
+name = "data-structures"
+version = "0.1.0"
+description = "Final project for Data Structures"
+authors = [
+    {name = "Dyonathan-Laner",email = "dyonathanbl@hotmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
