@@ -16,7 +16,7 @@ import sys
 import urllib.request
 
 # Configuration Constants
-WIKI_DATASET_URL = "https://zenodo.org/records/4728952/files/wiki_ts_200M_uint64?download=1"
+WIKI_DATASET_URL = "https://zenodo.org/records/15240501/files/wiki_ts_200M_uint64?download=1"
 DATASET_PATH = os.path.join("data", "wiki_ts_200M_uint64")
 SEED = 7
 THETA = 0.6
@@ -31,8 +31,8 @@ SCENARIOS_N = {
 INSERT_ORDERS = ["sorted", "shuffle"]
 
 
-def check_and_download_dataset() -> bool:
-    """Verifica se o dataset wiki existe ou inicia o download caso não esteja presente.
+def check_dataset() -> bool:
+    """Verifica se o dataset wiki existe na pasta local data/.
 
     Returns:
         bool: True se o dataset real estiver disponível, False caso contrário.
@@ -41,34 +41,16 @@ def check_and_download_dataset() -> bool:
         print(f"[Info] Dataset wiki encontrado em '{DATASET_PATH}'.")
         return True
 
-    print(f"[Aviso] Dataset wiki real não foi encontrado em '{DATASET_PATH}'.")
-    print(f"Iniciando download automático do Zenodo (~1.6 GB)...")
-    print("Nota: Este download pode levar alguns minutos dependendo da sua velocidade de internet.")
-
-    try:
-        os.makedirs("data", exist_ok=True)
-        
-        # Download tracker
-        last_reported_percent = -1
-        def download_progress(count, block_size, total_size):
-            nonlocal last_reported_percent
-            downloaded = count * block_size
-            if total_size > 0:
-                percent = int(downloaded * 100 / total_size)
-                # Log progress every 5%
-                if percent % 5 == 0 and percent != last_reported_percent:
-                    print(f"Progresso do download: {percent}% ({downloaded // (1024*1024)} MB / {total_size // (1024*1024)} MB)...")
-                    last_reported_percent = percent
-            else:
-                if count % 5000 == 0:
-                    print(f"Baixados: {downloaded // (1024*1024)} MB...")
-
-        urllib.request.urlretrieve(WIKI_DATASET_URL, DATASET_PATH, download_progress)
-        print("[Sucesso] Download do dataset concluído com sucesso!")
-        return True
-    except Exception as e:
-        print(f"\n[Erro] Falha ao baixar o dataset: {e}", file=sys.stderr)
-        return False
+    print(f"\n[Erro] Dataset wiki real não foi encontrado em '{DATASET_PATH}'.", file=sys.stderr)
+    print("--------------------------------------------------------------------------------", file=sys.stderr)
+    print("Para executar o benchmark com os dados reais do Grupo 7, faça o seguinte:", file=sys.stderr)
+    print("1. Baixe o dataset manualmente pelo seu navegador usando este link:", file=sys.stderr)
+    print("   https://zenodo.org/records/15240501/files/wiki_ts_200M_uint64?download=1", file=sys.stderr)
+    print("2. Crie uma pasta chamada 'data' (se não existir) na raiz do projeto.", file=sys.stderr)
+    print("3. Salve o arquivo dentro dela com o nome exato 'wiki_ts_200M_uint64' (sem extensão).", file=sys.stderr)
+    print("4. Execute o benchmark novamente.", file=sys.stderr)
+    print("--------------------------------------------------------------------------------\n", file=sys.stderr)
+    return False
 
 
 def run_workload_generator(n_name: str, n_val: int, order: str, use_synthetic: bool) -> tuple[str, str]:
@@ -187,10 +169,10 @@ def main():
     # 1. Obter dataset
     use_synthetic = args.use_synthetic
     if not use_synthetic:
-        success = check_and_download_dataset()
+        success = check_dataset()
         if not success:
-            print("[Aviso] Alternando automaticamente para chaves sintéticas como fallback...", file=sys.stderr)
-            use_synthetic = True
+            print("[Erro] O benchmark real não pode continuar sem o dataset da Wikipédia.", file=sys.stderr)
+            sys.exit(1)
 
     results = []
 
