@@ -31,25 +31,31 @@ def print_tree(node, prefix="", is_left=None):
 
 
 def exibir_ajuda():
-    print("\nComandos disponíveis:")
-    print("  i <chave>            - Insere uma chave na árvore (ex: i 15)")
-    print("  d <chave>            - Deleta uma chave da árvore (ex: d 15)")
-    print("  s <chave>            - Busca uma chave na árvore (ex: s 15)")
-    print("  r <chave>            - Retorna o rank da chave (quantidade de elementos menores) (ex: r 15)")
-    print("  sel <índice>         - Seleciona a chave na posição (índice ordenado, 0-indexed) (ex: sel 2)")
-    print("  ra <início> <fim>    - Retorna a quantidade de elementos no intervalo [início, fim] (ex: ra 10 30)")
-    print("  p                    - Imprime a árvore AVL graficamente")
-    print("  io                   - Imprime as chaves em ordem crescente (inorder)")
-    print("  altura, alt          - Exibe a altura e tamanho da árvore ativa (ex: alt)")
-    print("  c                    - Limpa a árvore")
-    print("  load <caminho>       - Carrega e insere um trace silenciosamente na árvore (ex: load data/traces/wiki_100k_shuffle.trace)")
-    print("  run <trace> <out>    - Executa um trace medindo tempos e gerando estatísticas (ex: run data/traces/wiki_100k_shuffle.trace data/output.out)")
-    print("  gen <ops> <out_pref> [order] - Gera chaves sintéticas e arquivo .trace (ex: gen 1000 data/teste shuffle)")
-    print("  verify <exp> <cand>  - Compara a saída candidata com o gabarito .expected (ex: verify data/teste.expected data/output.out)")
-    print("  bench [synthetic]    - Executa os cenários do benchmark consolidado (ex: bench)")
-    print("  wizard               - Abre o assistente interativo de benchmark rápido passo a passo")
-    print("  h, ajuda             - Mostra este menu de ajuda")
-    print("  q, sair              - Sai do REPL")
+    print("\n==================================================================================================================================")
+    print("                                                 MANUAL DE COMANDOS - ÁRVORE AVL                                                  ")
+    print("==================================================================================================================================")
+    print("  Operações Manuais na Árvore:")
+    print("    /insert <key>                             -> Adiciona uma nova chave numérica na árvore AVL e a rebalanceia.")
+    print("    /delete <key>                             -> Localiza e remove uma chave existente, restaurando o equilíbrio AVL.")
+    print("    /search <key>                             -> Realiza uma pesquisa rápida logarítmica O(log N) pela chave informada.")
+    print("    /rank <key>                               -> Determina a quantidade de elementos armazenados menores que a chave.")
+    print("    /select <index>                           -> Retorna o elemento na posição ordenada especificada (0-indexed).")
+    print("    /range_agg <start> <end>                  -> Executa a agregação (contagem para Grupo 7) no intervalo fechado de valores.")
+    print("    /print                                    -> Exibe uma representação visual estruturada e horizontal da árvore.")
+    print("    /inorder                                  -> Lista todas as chaves atualmente armazenadas em ordem crescente.")
+    print("    /height                                   -> Mostra a altura máxima e a quantidade de chaves salvas na árvore ativa.")
+    print("    /clear                                    -> Limpa completamente a árvore ativa da memória, esvaziando todos os nós.")
+    print("\n  Comandos de Benchmark e Automação:")
+    print("    /load <file_path>                         -> Carrega comandos de um arquivo .trace e os aplica à árvore ativa medindo o tempo.")
+    print("    /run <trace_path> <output_path>           -> Roda um arquivo de trace do zero em uma árvore isolada e gera relatórios físicos.")
+    print("    /generate <ops> <output_path> [order]     -> Cria arquivos .trace e .expected com chaves sintéticas para testes.")
+    print("    /verify <expected_path> <candidate_path>  -> Valida se o resultado gerado confere exatamente com o gabarito esperado.")
+    print("    /benchmark [synthetic]                    -> Roda os cenários consolidados completos do projeto (100k a 10M de chaves).")
+    print("    /wizard                                   -> Inicia o assistente de teste de desempenho interativo de ponta a ponta.")
+    print("\n  Utilitários do Console:")
+    print("    /help                                     -> Exibe este menu detalhado de comandos.")
+    print("    /exit                                     -> Encerra o console interativo com segurança.")
+    print("==================================================================================================================================")
 
 
 def main():
@@ -61,13 +67,19 @@ def main():
     except AttributeError:
         pass
 
-    print("====================================================")
-    print("       REPL Interativo - Árvore AVL Aumentada       ")
-    print("====================================================")
+    print("==================================================================================================================================")
+    print("                                              REPL Interativo - Árvore AVL Aumentada                                              ")
+    print("==================================================================================================================================")
     exibir_ajuda()
     
     tree = AVLTree()
     
+    valid_commands = {
+        "/insert", "/delete", "/search", "/rank", "/select", "/range_agg",
+        "/print", "/inorder", "/height", "/clear", "/load", "/run",
+        "/generate", "/verify", "/benchmark", "/wizard", "/help", "/exit"
+    }
+
     while True:
         try:
             user_input = input("\navl_tree> ").strip()
@@ -82,38 +94,42 @@ def main():
         cmd = parts[0].lower()
         args = parts[1:]
         
-        if cmd in ("q", "sair"):
+        if cmd not in valid_commands:
+            print(f"Comando '{cmd}' desconhecido. Digite '/help' para ver os comandos válidos.")
+            continue
+        
+        if cmd == "/exit":
             print("Saindo...")
             break
             
-        elif cmd in ("h", "ajuda"):
+        elif cmd == "/help":
             exibir_ajuda()
             
-        elif cmd == "p":
+        elif cmd == "/print":
             if tree.root is None:
                 print("Árvore está vazia.")
             else:
                 print("\nEstrutura atual da árvore:")
                 print_tree(tree.root)
                 
-        elif cmd == "io":
+        elif cmd == "/inorder":
             chaves = tree.inorder()
             print(f"Chaves em ordem: {chaves} (Total: {len(chaves)})")
             
-        elif cmd == "c":
+        elif cmd == "/clear":
             tree = AVLTree()
             print("Árvore limpa com sucesso.")
             
-        elif cmd in ("altura", "alt"):
+        elif cmd == "/height":
             if tree.root is None:
                 print("Árvore está vazia (altura = 0, tamanho = 0).")
             else:
                 print(f"Altura da árvore ativa: {tree.root.height}")
                 print(f"Total de chaves guardadas (tamanho): {tree.root.size}")
-            
-        elif cmd == "load":
+                
+        elif cmd == "/load":
             if not args:
-                print("Erro: informe o caminho do arquivo .trace. Ex: load data/traces/my_trace.trace")
+                print("Erro: informe o caminho do arquivo .trace. Ex: /load data/traces/my_trace.trace")
                 continue
             path = args[0]
             if not os.path.exists(path):
@@ -178,9 +194,9 @@ def main():
             else:
                 print("Árvore está vazia.")
             
-        elif cmd == "i":
+        elif cmd == "/insert":
             if not args:
-                print("Erro: insira uma chave para inserção. Ex: i 10")
+                print("Erro: insira uma chave para inserção. Ex: /insert 10")
                 continue
             try:
                 chave = int(args[0])
@@ -189,9 +205,9 @@ def main():
             except ValueError:
                 print("Erro: a chave deve ser um número inteiro.")
                 
-        elif cmd == "d":
+        elif cmd == "/delete":
             if not args:
-                print("Erro: insira uma chave para remoção. Ex: d 10")
+                print("Erro: insira uma chave para remoção. Ex: /delete 10")
                 continue
             try:
                 chave = int(args[0])
@@ -203,9 +219,9 @@ def main():
             except ValueError:
                 print("Erro: a chave deve ser um número inteiro.")
                 
-        elif cmd == "s":
+        elif cmd == "/search":
             if not args:
-                print("Erro: insira uma chave para busca. Ex: s 10")
+                print("Erro: insira uma chave para busca. Ex: /search 10")
                 continue
             try:
                 chave = int(args[0])
@@ -217,9 +233,9 @@ def main():
             except ValueError:
                 print("Erro: a chave deve ser um número inteiro.")
                 
-        elif cmd == "r":
+        elif cmd == "/rank":
             if not args:
-                print("Erro: insira uma chave para calcular o rank. Ex: r 10")
+                print("Erro: insira uma chave para calcular o rank. Ex: /rank 10")
                 continue
             try:
                 chave = int(args[0])
@@ -228,9 +244,9 @@ def main():
             except ValueError:
                 print("Erro: a chave deve ser um número inteiro.")
                 
-        elif cmd == "sel":
+        elif cmd == "/select":
             if not args:
-                print("Erro: insira um índice para seleção. Ex: sel 2")
+                print("Erro: insira um índice para seleção. Ex: /select 2")
                 continue
             try:
                 indice = int(args[0])
@@ -242,9 +258,9 @@ def main():
             except ValueError:
                 print("Erro: o índice deve ser um número inteiro.")
                 
-        elif cmd == "ra":
+        elif cmd == "/range_agg":
             if len(args) < 2:
-                print("Erro: informe os limites de início e fim. Ex: ra 10 30")
+                print("Erro: informe os limites de início e fim. Ex: /range_agg 10 30")
                 continue
             try:
                 inicio = int(args[0])
@@ -254,9 +270,9 @@ def main():
             except ValueError:
                 print("Erro: os limites devem ser números inteiros.")
                 
-        elif cmd == "run":
+        elif cmd == "/run":
             if len(args) < 2:
-                print("Erro: informe o caminho do trace e o arquivo de saída. Ex: run data/traces/my.trace data/output.out")
+                print("Erro: informe o caminho do trace e o arquivo de saída. Ex: /run data/traces/my.trace data/output.out")
                 continue
             trace_path, output_path = args[0], args[1]
             if not os.path.exists(trace_path):
@@ -269,9 +285,9 @@ def main():
             except Exception as e:
                 print(f"Erro durante execução: {e}")
                 
-        elif cmd == "gen":
+        elif cmd == "/generate":
             if len(args) < 2:
-                print("Erro: informe o número de operações e o prefixo de saída. Ex: gen 1000 data/meu_teste [shuffle/sorted]")
+                print("Erro: informe o número de operações e o prefixo de saída. Ex: /generate 1000 data/meu_teste [shuffle/sorted]")
                 continue
             ops = args[0]
             out_prefix = args[1]
@@ -291,9 +307,9 @@ def main():
             except Exception as e:
                 print(f"Erro ao gerar workload: {e}")
                 
-        elif cmd == "verify":
+        elif cmd == "/verify":
             if len(args) < 2:
-                print("Erro: informe o arquivo gabarito (.expected) e o arquivo de saída (.out). Ex: verify data/meu.expected data/output.out")
+                print("Erro: informe o arquivo gabarito (.expected) e o arquivo de saída (.out). Ex: /verify data/meu.expected data/output.out")
                 continue
             expected = args[0]
             candidate = args[1]
@@ -308,7 +324,7 @@ def main():
             except Exception as e:
                 print(f"Erro na verificação: {e}")
                 
-        elif cmd == "bench":
+        elif cmd == "/benchmark":
             use_synthetic = len(args) > 0 and args[0].lower() in ("synthetic", "--use-synthetic", "true")
             cmd_bench = [sys.executable, "benchmark_manager.py"]
             if use_synthetic:
@@ -321,7 +337,7 @@ def main():
             except Exception as e:
                 print(f"Erro ao rodar benchmark: {e}")
                 
-        elif cmd == "wizard":
+        elif cmd == "/wizard":
             print("\n--- Assistente Interativo de Benchmark Rápido ---")
             while True:
                 try:
@@ -465,9 +481,6 @@ def main():
                 subprocess.run(cmd_verify, check=True)
             except Exception as e:
                 print(f"Erro durante execução do assistente: {e}")
-                
-        else:
-            print(f"Comando '{cmd}' desconhecido. Digite 'h' ou 'ajuda' para ver comandos.")
 
 
 if __name__ == '__main__':
