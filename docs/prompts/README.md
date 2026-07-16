@@ -1,35 +1,13 @@
-# Dump organizado dos prompts (20% da nota)
+# Session Prompts Documentation
 
-O enunciado (§10) avalia "a qualidade dos prompts utilizados — enviar um dump
-de todos os chats usados, de maneira organizada. A avaliação foca no
-raciocínio e na iteração demonstrados, não no volume."
+This directory contains the logs of the interaction sessions between the team members and the AI coding assistants (Antigravity and Claude Code). These documents record the prompts used, the contexts in which they were executed, and the results achieved, demonstrating the iterative reasoning process of the group.
 
-## Como organizar
+## Directory Structure
 
-Um arquivo por sessão de chat, nomeado `NN-tema.md` (ou `.pdf`/`.txt`
-conforme a exportação da ferramenta), na ordem cronológica do projeto.
-Preencher o índice abaixo à medida que os dumps forem adicionados.
+* **[promptsGustavo.md](file:///C:/Users/Dyonathan/OneDrive/Desktop/data-structures-final-project-g7/docs/prompts/promptsGustavo.md)**: Focuses on the initial analysis of the project requirements, design choices, implementation of the unified CLI REPL interface, and validation of correctness using pytest and the verification oracle.
+* **[promptsLucas.md](file:///C:/Users/Dyonathan/OneDrive/Desktop/data-structures-final-project-g7/docs/prompts/promptsLucas.md)**: Focuses on empirical study preparation, implementation of latency measurement routines, baseline comparison (naive BST), running the complete 26-scenario benchmark suite, generating visualization plots, and drafting the final technical report.
+* **[promptsDyonathan.md](file:///C:/Users/Dyonathan/OneDrive/Desktop/data-structures-final-project-g7/docs/prompts/promptsDyonathan.md)**: Focuses on validation of tree balance and heights, REPL state persistence across commands, robustness in dataset management (manual vs. automatic download), and refinement of the REPL interface to enforce single, strict English commands.
 
-## Índice das sessões
+## Objective
 
-| # | Arquivo | Ferramenta | Tema / o que foi feito | Autor da sessão |
-|---|---|---|---|---|
-| 01 | `01-implementacao-avl.md` | [preencher] | Implementação inicial da AVL aumentada (insert/delete/rotações) | [preencher] |
-| 02 | `02-workload-e-oraculo.md` | [preencher] | Integração com gen_workload e verificação | [preencher] |
-| 03 | [`prompts.md`](prompts.md) | Claude Code | Instrumentação por operação, baseline BST ingênua, suíte de benchmarks (escala + θ), geração de gráficos, relatório empírico e justificativa — prompts anotados com contexto e resultado | Lucas |
-| … | | | | |
-
-> **Exportar a sessão do Claude Code (nº 03):** o transcript completo fica
-> no histórico da ferramenta; exportar como texto/markdown e salvar nesta
-> pasta. O mesmo vale para sessões de outros integrantes em outras
-> ferramentas (ChatGPT: Settings → Data Controls → Export; Claude.ai:
-> menu da conversa → compartilhar/exportar).
-
-## O que o docente procura (checklist por sessão)
-
-- [ ] O prompt inicial dá contexto e restrições (não só "faça X")?
-- [ ] Há **iteração**: correções, pedidos de explicação, decisões revisadas?
-- [ ] O grupo questiona/valida o que a ferramenta produz (ex.: rodar o
-      oráculo, testes, conferir números)?
-- [ ] Fica claro o que é autoria da ferramenta vs decisão do grupo?
-      (obrigatório também identificar isso no relatório — regras §11)
+These logs serve as supporting documentation to validate the active integration of AI assistance during the project development phases, complying with the project evaluation criteria.
